@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_6a833cc8c5c6788d2559e96bd28a7942 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+        
+    
+                    <style>
+                        .foliumtooltip {
+                            
+                        }
+                       .foliumtooltip table{
+                            margin: auto;
+                        }
+                        .foliumtooltip tr{
+                            text-align: left;
+                        }
+                        .foliumtooltip th{
+                            padding: 2px; padding-right: 8px;
+                        }
+                    </style>
+</head>
+
+<body>
+    
+    
+            <div class="folium-map" id="map_6a833cc8c5c6788d2559e96bd28a7942" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_6a833cc8c5c6788d2559e96bd28a7942 = L.map(
+                "map_6a833cc8c5c6788d2559e96bd28a7942",
+                {
+                    center: [48.0, 2.0],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 6,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+
+    
+            var tile_layer_e5ccf7a736806955e103f5d8512bfa14 = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca target=\"_blank\" href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca target=\"_blank\" href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_6a833cc8c5c6788d2559e96bd28a7942);
+        
+    
+        function geo_json_bdcf7067dddd718c92c9ea0f70685493_styler(feature) {
+            switch(feature.id) {
+                case "0": 
+                    return {"color": "transparent", "fillColor": "#ffeb00ff", "fillOpacity": 0.6};
+                case "1": case "48": 
+                    return {"color": "transparent", "fillColor": "#ffc900ff", "fillOpacity": 0.6};
+                case "2": 
+                    return {"color": "transparent", "fillColor": "#ffca00ff", "fillOpacity": 0.6};
+                case "3": case "30": 
+                    return {"color": "transparent", "fillColor": "#ff7e00ff", "fillOpacity": 0.6};
+                case "4": 
+                    return {"color": "transparent", "fillColor": "#ff2e00ff", "fillOpacity": 0.6};
+                case "5": 
+                    return {"color": "transparent", "fillColor": "#ff4100ff", "fillOpacity": 0.6};
+                case "6": 
+                    return {"color": "transparent", "fillColor": "#ffc800ff", "fillOpacity": 0.6};
+                case "7": 
+                    return {"color": "transparent", "fillColor": "#ff8c00ff", "fillOpacity": 0.6};
+                case "8": 
+                    return {"color": "transparent", "fillColor": "#ff9100ff", "fillOpacity": 0.6};
+                case "9": case "47": 
+                    return {"color": "transparent", "fillColor": "#ffce00ff", "fillOpacity": 0.6};
+                case "10": 
+                    return {"color": "transparent", "fillColor": "#ff6d00ff", "fillOpacity": 0.6};
+                case "11": 
+                    return {"color": "transparent", "fillColor": "#ffb100ff", "fillOpacity": 0.6};
+                case "12": 
+                    return {"color": "transparent", "fillColor": "#ff3e00ff", "fillOpacity": 0.6};
+                case "13": 
+                    return {"color": "transparent", "fillColor": "#ffa700ff", "fillOpacity": 0.6};
+                case "14": case "24": 
+                    return {"color": "transparent", "fillColor": "#ff9400ff", "fillOpacity": 0.6};
+                case "15": 
+                    return {"color": "transparent", "fillColor": "#ffc300ff", "fillOpacity": 0.6};
+                case "16": case "64": 
+                    return {"color": "transparent", "fillColor": "#ff5f00ff", "fillOpacity": 0.6};
+                case "17": 
+                    return {"color": "transparent", "fillColor": "#ffff00ff", "fillOpacity": 0.6};
+                case "18": 
+                    return {"color": "transparent", "fillColor": "#ffb300ff", "fillOpacity": 0.6};
+                case "19": 
+                    return {"color": "transparent", "fillColor": "#ff8000ff", "fillOpacity": 0.6};
+                case "20": 
+                    return {"color": "transparent", "fillColor": "#ffb700ff", "fillOpacity": 0.6};
+                case "21": case "22": 
+                    return {"color": "transparent", "fillColor": "#ffbf00ff", "fillOpacity": 0.6};
+                case "23": case "27": 
+                    return {"color": "transparent", "fillColor": "#ff7600ff", "fillOpacity": 0.6};
+                case "25": 
+                    return {"color": "transparent", "fillColor": "#fffd00ff", "fillOpacity": 0.6};
+                case "28": case "29": case "39": 
+                    return {"color": "transparent", "fillColor": "#ff9500ff", "fillOpacity": 0.6};
+                case "31": 
+                    return {"color": "transparent", "fillColor": "#ff4600ff", "fillOpacity": 0.6};
+                case "32": 
+                    return {"color": "transparent", "fillColor": "#ff9f00ff", "fillOpacity": 0.6};
+                case "33": 
+                    return {"color": "transparent", "fillColor": "#ff0000ff", "fillOpacity": 0.6};
+                case "34": 
+                    return {"color": "transparent", "fillColor": "#ff2a00ff", "fillOpacity": 0.6};
+                case "35": case "66": 
+                    return {"color": "transparent", "fillColor": "#ff4f00ff", "fillOpacity": 0.6};
+                case "36": 
+                    return {"color": "transparent", "fillColor": "#fff300ff", "fillOpacity": 0.6};
+                case "37": 
+                    return {"color": "transparent", "fillColor": "#ff6800ff", "fillOpacity": 0.6};
+                case "38": case "65": 
+                    return {"color": "transparent", "fillColor": "#ff8300ff", "fillOpacity": 0.6};
+                case "40": 
+                    return {"color": "transparent", "fillColor": "#ff7000ff", "fillOpacity": 0.6};
+                case "41": case "53": 
+                    return {"color": "transparent", "fillColor": "#ffe300ff", "fillOpacity": 0.6};
+                case "42": 
+                    return {"color": "transparent", "fillColor": "#ff8600ff", "fillOpacity": 0.6};
+                case "43": 
+                    return {"color": "transparent", "fillColor": "#ffb200ff", "fillOpacity": 0.6};
+                case "44": 
+                    return {"color": "transparent", "fillColor": "#ff6e00ff", "fillOpacity": 0.6};
+                case "45": case "94": 
+                    return {"color": "transparent", "fillColor": "#ffe200ff", "fillOpacity": 0.6};
+                case "46": case "70": 
+                    return {"color": "transparent", "fillColor": "#ffa200ff", "fillOpacity": 0.6};
+                case "49": 
+                    return {"color": "transparent", "fillColor": "#ffac00ff", "fillOpacity": 0.6};
+                case "50": 
+                    return {"color": "transparent", "fillColor": "#ffba00ff", "fillOpacity": 0.6};
+                case "51": 
+                    return {"color": "transparent", "fillColor": "#ff6500ff", "fillOpacity": 0.6};
+                case "52": 
+                    return {"color": "transparent", "fillColor": "#ffc100ff", "fillOpacity": 0.6};
+                case "54": 
+                    return {"color": "transparent", "fillColor": "#ff6600ff", "fillOpacity": 0.6};
+                case "55": 
+                    return {"color": "transparent", "fillColor": "#ffb800ff", "fillOpacity": 0.6};
+                case "56": 
+                    return {"color": "transparent", "fillColor": "#ff8a00ff", "fillOpacity": 0.6};
+                case "57": 
+                    return {"color": "transparent", "fillColor": "#ff7200ff", "fillOpacity": 0.6};
+                case "58": 
+                    return {"color": "transparent", "fillColor": "#ffe500ff", "fillOpacity": 0.6};
+                case "59": case "80": 
+                    return {"color": "transparent", "fillColor": "#ff3600ff", "fillOpacity": 0.6};
+                case "60": 
+                    return {"color": "transparent", "fillColor": "#ffd500ff", "fillOpacity": 0.6};
+                case "61": 
+                    return {"color": "transparent", "fillColor": "#fff000ff", "fillOpacity": 0.6};
+                case "62": 
+                    return {"color": "transparent", "fillColor": "#ff6000ff", "fillOpacity": 0.6};
+                case "63": 
+                    return {"color": "transparent", "fillColor": "#ff8100ff", "fillOpacity": 0.6};
+                case "67": 
+                    return {"color": "transparent", "fillColor": "#ff0c00ff", "fillOpacity": 0.6};
+                case "68": 
+                    return {"color": "transparent", "fillColor": "#ff9300ff", "fillOpacity": 0.6};
+                case "69": case "90": 
+                    return {"color": "transparent", "fillColor": "#ff8800ff", "fillOpacity": 0.6};
+                case "71": 
+                    return {"color": "transparent", "fillColor": "#ffcc00ff", "fillOpacity": 0.6};
+                case "72": 
+                    return {"color": "transparent", "fillColor": "#ffd400ff", "fillOpacity": 0.6};
+                case "73": 
+                    return {"color": "transparent", "fillColor": "#ff7300ff", "fillOpacity": 0.6};
+                case "74": case "76": case "88": 
+                    return {"color": "transparent", "fillColor": "#ff9200ff", "fillOpacity": 0.6};
+                case "75": 
+                    return {"color": "transparent", "fillColor": "#ff6300ff", "fillOpacity": 0.6};
+                case "77": case "89": 
+                    return {"color": "transparent", "fillColor": "#fffc00ff", "fillOpacity": 0.6};
+                case "78": 
+                    return {"color": "transparent", "fillColor": "#ffed00ff", "fillOpacity": 0.6};
+                case "79": 
+                    return {"color": "transparent", "fillColor": "#ffbb00ff", "fillOpacity": 0.6};
+                case "81": 
+                    return {"color": "transparent", "fillColor": "#ff9a00ff", "fillOpacity": 0.6};
+                case "82": 
+                    return {"color": "transparent", "fillColor": "#ffaa00ff", "fillOpacity": 0.6};
+                case "83": 
+                    return {"color": "transparent", "fillColor": "#ff6900ff", "fillOpacity": 0.6};
+                case "84": 
+                    return {"color": "transparent", "fillColor": "#ff8200ff", "fillOpacity": 0.6};
+                case "85": 
+                    return {"color": "transparent", "fillColor": "#ffda00ff", "fillOpacity": 0.6};
+                case "86": 
+                    return {"color": "transparent", "fillColor": "#ff7500ff", "fillOpacity": 0.6};
+                case "87": 
+                    return {"color": "transparent", "fillColor": "#ff1a00ff", "fillOpacity": 0.6};
+                case "92": 
+                    return {"color": "transparent", "fillColor": "#ffde00ff", "fillOpacity": 0.6};
+                case "93": 
+                    return {"color": "transparent", "fillColor": "#ffc600ff", "fillOpacity": 0.6};
+                default:
+                    return {"color": "transparent", "fillColor": "#fff200ff", "fillOpacity": 0.6};
+            }
+        }
+        function geo_json_bdcf7067dddd718c92c9ea0f70685493_highlighter(feature) {
+            switch(feature.id) {
+                default:
+                    return {"color": "blue", "weight": 1};
+            }
+        }
+
+        function geo_json_bdcf7067dddd718c92c9ea0f70685493_onEachFeature(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    if(typeof e.target.setStyle === "function"){
+                        geo_json_bdcf7067dddd718c92c9ea0f70685493.resetStyle(e.target);
+                    }
+                },
+                mouseover: function(e) {
+                    if(typeof e.target.setStyle === "function"){
+                        const highlightStyle = geo_json_bdcf7067dddd718c92c9ea0f70685493_highlighter(e.target.feature)
+                        e.target.setStyle(highlightStyle);
+                    }
+                },
+            });
+        };
+
+        var geo_json_bdcf7067dddd718c92c9ea0f70685493 = L.geoJson(null, {
+                onEachFeature: geo_json_bdcf7067dddd718c92c9ea0f70685493_onEachFeature,
+            
+                style: geo_json_bdcf7067dddd718c92c9ea0f70685493_styler,
+        });
+
+        function geo_json_bdcf7067dddd718c92c9ea0f70685493_add (data) {
+            geo_json_bdcf7067dddd718c92c9ea0f70685493
+                .addData(data)
+                .addTo(map_6a833cc8c5c6788d2559e96bd28a7942);
+        }
+
+            geo_json_bdcf7067dddd718c92c9ea0f70685493_add(my_geo_json_data);
+
+        
+    
+    geo_json_bdcf7067dddd718c92c9ea0f70685493.bindTooltip(
+    function(layer){
+    let div = L.DomUtil.create('div');
+    
+    let handleObject = feature=>typeof(feature)=='object' ? JSON.stringify(feature) : feature;
+    let fields = ["nom_departement", "Weighted Average APL"];
+    let aliases = ["nom_departement", "Weighted Average APL"];
+    let table = '<table>' +
+        String(
+        fields.map(
+        (v,i)=>
+        `<tr>
+            <th>${aliases[i]}</th>
+            
+            <td>${handleObject(layer.feature.properties[v])}</td>
+        </tr>`).join(''))
+    +'</table>';
+    div.innerHTML=table;
+    
+    return div
+    }
+    ,{"className": "foliumtooltip", "sticky": true});
+                     
+</script>
+</html>

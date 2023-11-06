@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Interactive Map</title>
+    <!-- Include Leaflet CSS and JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+    <!-- Include Chroma.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chroma-js/2.1.0/chroma.min.js"></script>
+</head>
+<body>
+<h1>Select a Year:</h1>
+<form method="POST" action="/get_map">
+    <select name="year" id="year-selector">
+        <option value="2015">2015</option>
+        <option value="2016">2016</option>
+        <option value="2017">2017</option>
+        <option value="2018">2018</option>
+    </select>
+    <input type="submit" value="Show Map">
+</form>
+<br>
+<h2>Map for Year <span id="selected-year">2015</span>:</h2>
+<div id="map" style="width: 800px; height: 600px;"></div>
+<script>
+    var apl = {{ apl|tojson|safe }};
+    var mymap = L.map(
+        "map",
+        {
+            center: [48.0, 2.0],
+            crs: L.CRS.EPSG3857,
+            zoom: 6,
+            zoomControl: true,
+            preferCanvas: false
+        }
+    );
+
+    var tile_layer = L.tileLayer(
+        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        {"attribution": "Data by \u0026copy; \u003ca target=\"_blank\" href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca target=\"_blank\" href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+    ).addTo(mymap);
+
+    var geojsonLayer;
+    var selectedYear = "2015"; // Default year
+
+    function updateMap(year) {
+        selectedYear = year;
+        // Remove the previous GeoJSON layer if it exists
+        if (geojsonLayer) {
+            mymap.removeLayer(geojsonLayer);
+        }
+
+        geojsonLayer = L.geoJSON(apl, {
+            style: function (feature) {
+                return {
+                    fillColor: getColor(feature.properties, selectedYear),
+                    color: 'transparent',
+                    fillOpacity: 0.6
+                };
+            },
+            onEachFeature: function (feature, layer) {
+                layer.bindPopup('Department: ' + feature.properties['nom_departement'] + '<br>Weighted Average APL: ' + feature.properties[selectedYear]);
+            }
+        }).addTo(mymap);
+
+        // Update the selected year display
+        document.getElementById("selected-year").innerText = selectedYear;
+    }
+
+    function getColor(properties, year) {
+        var aplValue = properties[year];
+        return getColorForAPLValue(aplValue);
+    }
+
+    function getColorForAPLValue(aplValue) {
+        // You can define your color scale here based on APL values
+        // For example, return a different color for each APL range
+        if (aplValue < 100) {
+            return 'blue';
+        } else if (aplValue < 200) {
+            return 'green';
+        } else {
+            return 'red';
+        }
+    }
+
+    document.getElementById("year-selector").addEventListener("change", function () {
+        var year = this.value;
+        updateMap(year);
+    });
+
+    // Call the updateMap function with the initial year
+    updateMap(selectedYear);
+</script>
+</body>
+</html>
