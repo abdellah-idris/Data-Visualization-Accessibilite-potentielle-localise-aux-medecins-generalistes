@@ -1,19 +1,20 @@
-from flask import Flask, render_template, request
-import branca.colormap as cm
 from mock import departement_apl_2015, departement_apl_2016, departement_apl_2017, departement_apl_2018
+from flask import Flask, render_template, request, jsonify
+import branca.colormap as cm
+import json
 
 app = Flask(__name__)
-
 
 # Define a color scale for the choropleth using a LinearColormap
 color_scale = cm.LinearColormap(['yellow', 'red'], vmin=0, vmax=1)
 
 @app.route('/')
 def index():
-    # Load the default map
-    year = "2018"
+    # Load the default map for a selected year
+    year = "2018"  # Default year
+    apl = departement_apl_2018  # Default data
 
-    apl = departement_apl_2018
+    # Prepare the data as a GeoJSON FeatureCollection
     apl_dict = {
         'type': 'FeatureCollection',
         'features': []
@@ -33,15 +34,17 @@ def index():
             'geometry': row['geometry'].__geo_interface__
         }
         apl_dict['features'].append(feature)
-    # print(apl_dict.keys())
-    # print(apl_dict.items())
-    return render_template('map.html', default_year=year, apl=apl_dict)
+
+    return render_template('map.html', selected_year=year, apl_data=jsonify(apl_dict))
 
 @app.route('/get_map', methods=['POST'])
 def get_map():
-    year = request.form['year']
+    if request.method == 'POST':
+        year = request.form.get('year')
+    else:
+        year = "2015"  # Default year
 
-    # Load the map based on the selected year
+    # Load data based on the selected year
     if year == '2015':
         apl = departement_apl_2015
     elif year == '2016':
@@ -50,8 +53,6 @@ def get_map():
         apl = departement_apl_2017
     elif year == '2018':
         apl = departement_apl_2018
-    else:
-        return "Year not found"
 
     apl_dict = {
         'type': 'FeatureCollection',
@@ -65,14 +66,16 @@ def get_map():
                 'code': row['code'],
                 'nom_departement': row['nom_departement'],
                 'Weighted APL': row['Weighted APL'],
-                'Population standardisée '+ str(int(year)-2) + ' pour la médecine générale': row['Population standardisée '+ str(int(year)-2) + ' pour la médecine générale'],
+                'Population standardisée '+ str(int(year)-2) + ' pour la médecine générale': row[
+                    'Population standardisée '+ str(int(year)-2) + ' pour la médecine générale'],
                 'Weighted Average APL': row['Weighted Average APL'],
             },
             'geometry': row['geometry'].__geo_interface__
         }
         apl_dict['features'].append(feature)
 
-    return render_template('map.html', default_year=year, apl=apl_dict)
+    return jsonify(apl_dict)  # Return JSON data to update the map
+
 
 if __name__ == '__main__':
     app.run(debug=True)

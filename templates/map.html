@@ -1,31 +1,73 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Interactive Map</title>
-    <!-- Include Leaflet CSS and JS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-
-    <!-- Include Chroma.js -->
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script>
+        L_NO_TOUCH = false;
+        L_DISABLE_3D = false;
+    </script>
+    <style>html, body {width: 100%; height: 100%; margin: 0; padding: 0;}</style>
+    <style>#map {position: absolute; top: 0; bottom: 0; right: 0; left: 0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/chroma-js/2.1.0/chroma.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <style>
+        #map {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            left: 0%;
+            top: 0%;
+        }
+        .leaflet-container { font-size: 1rem; }
+    </style>
+    <style>
+        .foliumtooltip {
+        }
+        .foliumtooltip table {
+            margin: auto;
+        }
+        .foliumtooltip tr {
+            text-align: left;
+        }
+        .foliumtooltip th {
+            padding: 2px;
+            padding-right: 8px;
+        }
+    </style>
 </head>
 <body>
 <h1>Select a Year:</h1>
 <form method="POST" action="/get_map">
     <select name="year" id="year-selector">
-        <option value="2015">2015</option>
-        <option value="2016">2016</option>
-        <option value="2017">2017</option>
-        <option value="2018">2018</option>
+        <option value="2015" {% if selected_year == '2015' %}selected{% endif %}>2015</option>
+        <option value="2016" {% if selected_year == '2016' %}selected{% endif %}>2016</option>
+        <option value="2017" {% if selected_year == '2017' %}selected{% endif %}>2017</option>
+        <option value="2018" {% if selected_year == '2018' %}selected{% endif %}>2018</option>
     </select>
     <input type="submit" value="Show Map">
 </form>
+<div class="folium-map" id="map" ></div>
 <br>
-<h2>Map for Year <span id="selected-year">2015</span>:</h2>
-<div id="map" style="width: 800px; height: 600px;"></div>
+<h2>Map for Year <span id="selected-year">{{ selected_year }}</span>:</h2>
 <script>
-    var apl = {{ apl|tojson|safe }};
-    var mymap = L.map(
+    minAPL = 0
+    maxAPL = 5
+    var color_scale = chroma.scale(['yellow', 'red']).domain([0, 1]);
+
+    var selectedYear = "{{ selected_year }}";
+
+    var map = L.map(
         "map",
         {
             center: [48.0, 2.0],
@@ -38,59 +80,61 @@
 
     var tile_layer = L.tileLayer(
         "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-        {"attribution": "Data by \u0026copy; \u003ca target=\"_blank\" href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca target=\"_blank\" href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
-    ).addTo(mymap);
+        {
+            "attribution": "Data by &copy; <a target=\"_blank\" href=\"http://openstreetmap.org\">OpenStreetMap</a>, under <a target=\"_blank\" href=\"http://www.openstreetmap.org/copyright\">ODbL</a>.",
+            "detectRetina": false,
+            "maxNativeZoom": 18,
+            "maxZoom": 18,
+            "minZoom": 0,
+            "noWrap": false,
+            "opacity": 1,
+            "subdomains": "abc",
+            "tms": false
+        }
+    ).addTo(map);
 
-    var geojsonLayer;
-    var selectedYear = "2015"; // Default year
+    // Add a GeoJSON layer (empty for now)
+    var geojsonLayer = L.geoJson(null, {
+        style: function (feature) {
+            var aplValue = feature.properties['Weighted Average APL'];
+            var fillColor = getColorForAPL(aplValue);
+            return {
+                color: "transparent",
+                fillColor: fillColor,
+                fillOpacity: 0.6
+            };
+        }
+    }).addTo(map);
 
+    // Function to get color based on APL value
+
+    function getColorForAPL(aplValue) {
+        var normalizedAPL = (aplValue - minAPL) / (maxAPL - minAPL);
+        return color_scale(normalizedAPL);
+    }
+
+    // Function to update the map when the year changes
     function updateMap(year) {
-        selectedYear = year;
-        // Remove the previous GeoJSON layer if it exists
-        if (geojsonLayer) {
-            mymap.removeLayer(geojsonLayer);
-        }
-
-        geojsonLayer = L.geoJSON(apl, {
-            style: function (feature) {
-                return {
-                    fillColor: getColor(feature.properties, selectedYear),
-                    color: 'transparent',
-                    fillOpacity: 0.6
-                };
-            },
-            onEachFeature: function (feature, layer) {
-                layer.bindPopup('Department: ' + feature.properties['nom_departement'] + '<br>Weighted Average APL: ' + feature.properties[selectedYear]);
+        $.ajax({
+            type: 'POST',
+            url: '/get_map',
+            data: { year: year },
+            success: function (data) {
+                geojsonLayer.clearLayers();
+                geojsonLayer.addData(data);
+                selectedYear = year;
+                document.getElementById("selected-year").textContent = selectedYear;
             }
-        }).addTo(mymap);
-
-        // Update the selected year display
-        document.getElementById("selected-year").innerText = selectedYear;
+        });
     }
 
-    function getColor(properties, year) {
-        var aplValue = properties[year];
-        return getColorForAPLValue(aplValue);
-    }
-
-    function getColorForAPLValue(aplValue) {
-        // You can define your color scale here based on APL values
-        // For example, return a different color for each APL range
-        if (aplValue < 100) {
-            return 'blue';
-        } else if (aplValue < 200) {
-            return 'green';
-        } else {
-            return 'red';
-        }
-    }
-
-    document.getElementById("year-selector").addEventListener("change", function () {
-        var year = this.value;
-        updateMap(year);
+    // Event handler for the year selector
+    $("#year-selector").change(function () {
+        var newYear = $(this).val();
+        updateMap(newYear);
     });
 
-    // Call the updateMap function with the initial year
+    // Initial update of the map based on the selected year
     updateMap(selectedYear);
 </script>
 </body>
