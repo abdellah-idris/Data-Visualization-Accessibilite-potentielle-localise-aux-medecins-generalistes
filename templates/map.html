@@ -61,8 +61,8 @@
 <br>
 <h2>Map for Year <span id="selected-year">{{ selected_year }}</span>:</h2>
 <script>
-    minAPL = 0
-    maxAPL = 5
+    var minAPL = 2;
+    var maxAPL = 6;
     var color_scale = chroma.scale(['yellow', 'red']).domain([0, 1]);
 
     var selectedYear = "{{ selected_year }}";
@@ -93,7 +93,7 @@
         }
     ).addTo(map);
 
-    // Add a GeoJSON layer (empty for now)
+    // Add a GeoJSON layer with highlighting and tooltips
     var geojsonLayer = L.geoJson(null, {
         style: function (feature) {
             var aplValue = feature.properties['Weighted Average APL'];
@@ -103,30 +103,53 @@
                 fillColor: fillColor,
                 fillOpacity: 0.6
             };
+        },
+        onEachFeature: function (feature, layer) {
+            layer.on({
+                mouseover: highlightFeature,
+                mouseout: resetHighlight
+            });
+            var aplValue = feature.properties['Weighted Average APL'];
+            layer.bindTooltip("Weighted APL: " + aplValue);
         }
     }).addTo(map);
 
-    // Function to get color based on APL value
+    // Function to highlight a feature
+    function highlightFeature(e) {
+        var layer = e.target;
+        layer.setStyle({
+            color: "blue",
+            weight: 2
+        });
+    }
 
+    // Function to reset the highlight
+    function resetHighlight(e) {
+        geojsonLayer.resetStyle(e.target);
+    }
+
+    // Function to get color based on APL value
     function getColorForAPL(aplValue) {
         var normalizedAPL = (aplValue - minAPL) / (maxAPL - minAPL);
         return color_scale(normalizedAPL);
     }
 
     // Function to update the map when the year changes
-    function updateMap(year) {
-        $.ajax({
-            type: 'POST',
-            url: '/get_map',
-            data: { year: year },
-            success: function (data) {
-                geojsonLayer.clearLayers();
-                geojsonLayer.addData(data);
-                selectedYear = year;
-                document.getElementById("selected-year").textContent = selectedYear;
-            }
-        });
-    }
+function updateMap(year) {
+    $.ajax({
+        type: 'POST',
+        url: '/get_map',
+        data: { year: year },
+        success: function (data) {
+            geojsonLayer.clearLayers();
+            geojsonLayer.addData(data);
+            selectedYear = year;
+            document.getElementById("selected-year").textContent = selectedYear;
+        },
+        dataType: 'json'  // Set the expected response data type to JSON
+    });
+}
+
 
     // Event handler for the year selector
     $("#year-selector").change(function () {
