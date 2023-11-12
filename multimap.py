@@ -80,6 +80,7 @@ def get_map():
         }
         apl_dict['features'].append(feature)
 
+
     return jsonify(apl_dict)  # Return JSON data to update the map
 
 
