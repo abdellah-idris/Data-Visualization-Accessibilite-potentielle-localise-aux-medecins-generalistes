@@ -1,4 +1,4 @@
-from mock import departement_apl_2015, departement_apl_2016, departement_apl_2017, departement_apl_2018, departement_apl_2019, departement_apl_2021
+from mock import department_apl_2015, department_apl_2016, department_apl_2017, department_apl_2018, department_apl_2019, department_apl_2021
 from flask import Flask, render_template, request, jsonify
 import branca.colormap as cm
 
@@ -12,7 +12,7 @@ color_scale = cm.LinearColormap(['yellow', 'red'], vmin=0, vmax=1)
 def index():
     # Load the default map for a selected year
     year = "2015"  # Default year
-    apl = departement_apl_2015  # Default data
+    apl = department_apl_2015  # Default data
 
     # Prepare the data as a GeoJSON FeatureCollection
     apl_dict = {
@@ -48,17 +48,17 @@ def get_map():
 
     # Load data based on the selected year
     if year == '2015':
-        apl = departement_apl_2015
+        apl = department_apl_2015
     elif year == '2016':
-        apl = departement_apl_2016
+        apl = department_apl_2016
     elif year == '2017':
-        apl = departement_apl_2017
+        apl = department_apl_2017
     elif year == '2018':
-        apl = departement_apl_2018
+        apl = department_apl_2018
     elif year == '2019':
-        apl = departement_apl_2019
+        apl = department_apl_2019
     elif year == '2021':
-        apl = departement_apl_2021
+        apl = department_apl_2021
 
     apl_dict = {
         'type': 'FeatureCollection',
