@@ -39,7 +39,7 @@ def merge_paris_geo(geo, paris_data):
 
 
 def get_paris_data(apl):
-    return apl[(apl_2021['Code commune INSEE'] >= 75000) & (apl['Code commune INSEE'] <= 76000)]
+    return apl[(apl['Code commune INSEE'] > 75000) & (apl['Code commune INSEE'] < 76000)]
 
 
 apl_2015 = read_apl_csv(2015)
@@ -69,7 +69,6 @@ paris_df_2016 = get_paris_data(apl_2016)
 paris_df_2017 = get_paris_data(apl_2017)
 paris_df_2018 = get_paris_data(apl_2018)
 paris_df_2019 = get_paris_data(apl_2019)
-paris_df_2021 = get_paris_data(apl_2021)
 
 
 grouped_apl_2015 = group_by_department(apl_2015, '2013')
@@ -105,9 +104,9 @@ department_apl_2018 = merge_to_get_coordinate(grouped_apl_2018)
 department_apl_2019 = merge_to_get_coordinate(grouped_apl_2019)
 department_apl_2021 = merge_to_get_coordinate(grouped_apl_2021)
 
-print("department apl")
-print(department_apl_2021.columns)
-print(department_apl_2021.head())
+# print("department apl")
+# print(department_apl_2021.columns)
+# print(department_apl_2021.head())
 
 
 paris_geo_2015 = merge_paris_geo(paris_gpd, paris_df_2015)
@@ -116,7 +115,8 @@ paris_geo_2017 = merge_paris_geo(paris_gpd, paris_df_2017)
 paris_geo_2018 = merge_paris_geo(paris_gpd, paris_df_2018)
 paris_geo_2019 = merge_paris_geo(paris_gpd, paris_df_2019)
 paris_geo_2021 = merge_paris_geo(paris_gpd, paris_df_2021)
-print("PARIS GEO")
-print(paris_geo_2021.columns)
-print(paris_geo_2021.head())
+
+# print("PARIS GEO")
+# print(paris_geo_2021.columns)
+# print(paris_geo_2021.head())
 

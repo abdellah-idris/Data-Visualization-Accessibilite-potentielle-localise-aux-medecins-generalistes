@@ -72,7 +72,7 @@ def get_map():
             'type': 'Feature',
             'properties': {
                 'code': row['code'],
-                'nom_departement': row['nom_departement'],
+                'nom': row['nom_departement'],
                 'Weighted APL': row['Weighted APL'],
                 'Population standardisée ' + str(int(year)-2) + ' pour la médecine générale': row[
                 'Population standardisée ' + str(int(year)-2) + ' pour la médecine générale'],
@@ -90,12 +90,9 @@ def get_paris_data():
     apl = None
     if request.method == 'POST':
         year = request.form.get('year')
-        print('post')
     else:
         year = "2015"  # Default year
-        print('default')
 
-    print(year)
     # Load data based on the selected year
     if year == '2015':
         apl = paris_geo_2015
@@ -109,8 +106,7 @@ def get_paris_data():
         apl = paris_geo_2019
     elif year == '2021':
         apl = paris_geo_2021
-    print("###########")
-    print(apl.columns)
+
     apl_dict = {
         'type': 'FeatureCollection',
         'features': []
@@ -121,7 +117,7 @@ def get_paris_data():
             'type': 'Feature',
             'properties': {
                 'code': row['Code commune INSEE'],
-                'nom_departement': row['nom_departement'],
+                'nom': row['nom_commune'],
                 'Weighted Average APL': row['APL aux médecins généralistes'],
                 'Population standardisée ' + str(int(year)-2) + ' pour la médecine générale': row[
                     'Population standardisée ' + str(int(year)-2) + ' pour la médecine générale'],

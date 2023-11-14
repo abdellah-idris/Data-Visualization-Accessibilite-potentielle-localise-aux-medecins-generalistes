@@ -101,7 +101,7 @@
     // Function to add an onclick method to show department name
     function onClickFeature(e) {
         var layer = e.target;
-        var departmentName = layer.feature.properties['nom_departement'];
+        var departmentName = layer.feature.properties['nom'];
         // Check if the department name is Paris
         if (departmentName === 'Paris') {
             // Fetch Paris GeoJSON data
@@ -138,7 +138,7 @@
                 mouseover: function (e) {
                     highlightFeature(e);
                     var aplValue = feature.properties['Weighted Average APL'];
-                    var region = feature.properties['nom_departement'];
+                    var region = feature.properties['nom'];
                     layer.bindTooltip("Department: " + region + "<br>Weighted APL: " + aplValue).openTooltip();
                 },
                 mouseout: function (e) {
