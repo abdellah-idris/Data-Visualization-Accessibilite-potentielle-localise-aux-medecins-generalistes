@@ -1,0 +1,9 @@
+/* styles.css */
+.year-container {
+    display: flex;
+    align-items: center;
+}
+
+.year-container p {
+    margin-right: 10px;  /* Adjust the margin as needed */
+}

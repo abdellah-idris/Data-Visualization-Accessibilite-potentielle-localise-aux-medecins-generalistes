@@ -98,7 +98,31 @@
         }
     ).addTo(map);
 
-    // Add a GeoJSON layer with highlighting and tooltips
+    // Function to add an onclick method to show department name
+    function onClickFeature(e) {
+        var layer = e.target;
+        var departmentName = layer.feature.properties['nom_departement'];
+        // Check if the department name is Paris
+        if (departmentName === 'Paris') {
+            // Fetch Paris GeoJSON data
+            $.ajax({
+                type: 'POST',
+                url: '/get_paris_data',
+                data: { year: selectedYear },
+                success: function (parisData) {
+                    geojsonLayer.clearLayers();
+                    geojsonLayer.addData(parisData);
+                    // Additional actions if needed
+                },
+                dataType: 'json'
+            });
+        } else {
+            // Display the department name
+            alert('Department: ' + departmentName);
+        }
+    }
+
+    // Add a GeoJSON layer with highlighting, tooltips, and onclick method
     var geojsonLayer = L.geoJson(null, {
         style: function (feature) {
             var aplValue = feature.properties['Weighted Average APL'];
@@ -111,13 +135,20 @@
         },
         onEachFeature: function (feature, layer) {
             layer.on({
-                mouseover: highlightFeature,
-                mouseout: resetHighlight
+                mouseover: function (e) {
+                    highlightFeature(e);
+                    var aplValue = feature.properties['Weighted Average APL'];
+                    var region = feature.properties['nom_departement'];
+                    layer.bindTooltip("Department: " + region + "<br>Weighted APL: " + aplValue).openTooltip();
+                },
+                mouseout: function (e) {
+                    resetHighlight(e);
+                    layer.unbindTooltip();
+                },
+                click: function (e) {
+                    onClickFeature(e);
+                }
             });
-            var aplValue = feature.properties['Weighted Average APL'];
-            var region = feature.properties['nom_departement'];
-            layer.bindTooltip("Departement : " + aplValue);
-            layer.bindTooltip("Weighted Average APL : " + aplValue);
         }
     }).addTo(map);
 
@@ -137,6 +168,9 @@
 
     // Function to get color based on APL value
     function getColorForAPL(aplValue) {
+        if (aplValue === undefined || isNaN(aplValue)) {
+            return 'gray';  // Default color for undefined or NaN values
+        }
         var normalizedAPL = (aplValue - minAPL) / (maxAPL - minAPL);
         return color_scale(normalizedAPL);
     }
@@ -156,7 +190,6 @@
             dataType: 'json'  // Set the expected response data type to JSON
         });
     }
-
 
     // Event handler for the year selector
     $("#year-selector").change(function () {
