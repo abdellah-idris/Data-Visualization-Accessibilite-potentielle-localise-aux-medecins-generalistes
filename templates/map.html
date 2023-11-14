@@ -99,28 +99,35 @@
     ).addTo(map);
 
     // Function to add an onclick method to show department name
-    function onClickFeature(e) {
-        var layer = e.target;
-        var departmentName = layer.feature.properties['nom'];
-        // Check if the department name is Paris
-        if (departmentName === 'Paris') {
-            // Fetch Paris GeoJSON data
-            $.ajax({
-                type: 'POST',
-                url: '/get_paris_data',
-                data: { year: selectedYear },
-                success: function (parisData) {
-                    geojsonLayer.clearLayers();
-                    geojsonLayer.addData(parisData);
-                    // Additional actions if needed
-                },
-                dataType: 'json'
-            });
-        } else {
-            // Display the department name
-            alert('Department: ' + departmentName);
-        }
+// Function to add an onclick method to show department name
+function onClickFeature(e) {
+    var layer = e.target;
+    var departmentName = layer.feature.properties['nom'];
+    // Check if the department name is Paris
+    if (departmentName === 'Paris') {
+        // Fetch Paris GeoJSON data
+        $.ajax({
+            type: 'POST',
+            url: '/get_paris_data',
+            data: { year: selectedYear },
+            success: function (parisData) {
+                geojsonLayer.clearLayers();
+                geojsonLayer.addData(parisData);
+
+                // Zoom to the bounds of the Paris GeoJSON data
+                map.fitBounds(geojsonLayer.getBounds());
+
+                // Additional actions if needed
+            },
+            dataType: 'json'
+        });
+    } else {
+        // Display the department name
+        // TODO : other departemnts
+        console.log('Department: ' + departmentName);
     }
+}
+
 
     // Add a GeoJSON layer with highlighting, tooltips, and onclick method
     var geojsonLayer = L.geoJson(null, {

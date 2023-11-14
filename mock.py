@@ -69,6 +69,7 @@ paris_df_2016 = get_paris_data(apl_2016)
 paris_df_2017 = get_paris_data(apl_2017)
 paris_df_2018 = get_paris_data(apl_2018)
 paris_df_2019 = get_paris_data(apl_2019)
+paris_df_2021 = get_paris_data(apl_2021)
 
 
 grouped_apl_2015 = group_by_department(apl_2015, '2013')
