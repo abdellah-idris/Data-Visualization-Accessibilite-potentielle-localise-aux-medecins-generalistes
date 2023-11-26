@@ -169,10 +169,20 @@ nord_geo_2018 = merge_geo(nord_geo, nord_df_2018)
 nord_geo_2019 = merge_geo(nord_geo, nord_df_2019)
 nord_geo_2021 = merge_geo(nord_geo, nord_df_2021)
 
-
-# todo : get the department data before merging
-yveline_df_2015 = get_departement_data(apl_2015, '2013', 'Yvelines')
-
+# Pas-de-Calais
+pdc_df_2015 = get_departement_data(apl_2015, '2013', 'Pas-de-Calais')
+pdc_df_2016 = get_departement_data(apl_2016, '2014', 'Pas-de-Calais')
+pdc_df_2017 = get_departement_data(apl_2017, '2015', 'Pas-de-Calais')
+pdc_df_2018 = get_departement_data(apl_2018, '2016', 'Pas-de-Calais')
+pdc_df_2019 = get_departement_data(apl_2019, '2017', 'Pas-de-Calais')
+pdc_df_2021 = get_departement_data(apl_2021, '2019', 'Pas-de-Calais')
+pdc_geo = get_geo(r"C:\Users\idris\OneDrive\Documents\Study\M2\data vis\project\ressources\Pas-de-Calais.geojson")
+pdc_geo_2015 = merge_geo(pdc_geo, pdc_df_2015)
+pdc_geo_2016 = merge_geo(pdc_geo, pdc_df_2016)
+pdc_geo_2017 = merge_geo(pdc_geo, pdc_df_2017)
+pdc_geo_2018 = merge_geo(pdc_geo, pdc_df_2018)
+pdc_geo_2019 = merge_geo(pdc_geo, pdc_df_2019)
+pdc_geo_2021 = merge_geo(pdc_geo, pdc_df_2021)
 
 # group by departement
 grouped_apl_2015 = group_by_department(apl_2015, '2013')
