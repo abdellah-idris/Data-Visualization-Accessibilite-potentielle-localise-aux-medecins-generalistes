@@ -44,9 +44,9 @@ def group_by_arrondissement(apl, year):
         'Population standardisée ' + year + ' pour la médecine générale']
 
     # Group by department and calculate the weighted average APL
-    apl = apl.groupby('arrondissement').agg({
+    apl = apl.groupby(['nom_departement','arrondissement']).agg({
         'Weighted APL': 'sum',
-        'Population standardisée ' + year + ' pour la médecine générale': 'sum'
+        'Population standardisée ' + year + ' pour la médecine générale': 'sum',
     }).reset_index()
 
     apl['Weighted Average APL'] = apl['Weighted APL'] / apl[
@@ -55,11 +55,17 @@ def group_by_arrondissement(apl, year):
 
 
 def merge_to_get_coordinate(apl):
+    # Load the GeoJSON file with France's regions
+    france_regions = gpd.read_file(
+        "https://raw.githubusercontent.com/holtzy/The-Python-Graph-Gallery/master/static/data/france.geojson")
+    france_regions = france_regions.rename(columns={'nom': 'nom_departement'})
     return france_regions.merge(apl, on='nom_departement')
 
 
 def merge_paris_geo(geo, paris_data):
     return pd.merge(paris_data, geo, on='Code commune INSEE')
+def merge_geo(geo, data):
+    return pd.merge(data, geo, on='Code commune INSEE')
 
 
 def get_cdp():
@@ -74,41 +80,8 @@ def get_paris_data(apl):
     return apl[(apl['Code commune INSEE'] > 75000) & (apl['Code commune INSEE'] < 76000)]
 
 
-def get_yveline_data(apl, year):
-    apl = apl[(apl['nom_departement'] == 'Yvelines')]
-    # Calculate the weighted APL for each commune
-    apl['Weighted APL'] = apl['APL aux médecins généralistes'] * apl[
-        'Population standardisée ' + year + ' pour la médecine générale']
-
-    # Group by department and calculate the weighted average APL
-    apl = apl.groupby('nom_commune').agg({
-        'Weighted APL': 'sum',
-        'Population standardisée ' + year + ' pour la médecine générale': 'sum'
-    }).reset_index()
-
-    apl['Weighted Average APL'] = apl['Weighted APL'] / apl[
-        'Population standardisée ' + year + ' pour la médecine générale']
-
-    return apl
-
-
-def get_departement_nord_data(apl, year):
-    apl = apl[(apl['nom_departement'] == 'Nord')]
-    # Calculate the weighted APL for each commune
-    # apl['Weighted APL'] = apl['APL aux médecins généralistes'] * apl[
-    #     'Population standardisée ' + year + ' pour la médecine générale']
-    # print(apl.shape)
-    #
-    # # Group by department and calculate the weighted average APL
-    # apl = apl.groupby('nom_departement').agg({
-    #     'Weighted APL': 'sum',
-    #     'Population standardisée ' + year + ' pour la médecine générale': 'sum'
-    # }).reset_index()
-    #
-    # apl['Weighted Average APL'] = apl['Weighted APL'] / apl[
-    #     'Population standardisée ' + year + ' pour la médecine générale']
-    #
-    # print(apl.shape)
+def get_departement_data(apl, year, departement):
+    apl = apl[(apl['nom_departement'] == departement)]
 
     return apl
 
@@ -124,9 +97,25 @@ def get_arrondissement():
 
     return arrondissement
 
+def get_paris_gpd():
+    # Load the GeoJSON file with France's regions
+    paris_gpd = gpd.read_file(r"C:\Users\idris\OneDrive\Documents\Study\M2\data "
+                              r"vis\project\ressources\paris-arrondissements.geojson")
+    paris_gpd = paris_gpd.rename(columns={'c_arinsee': 'Code commune INSEE'})
+    columns_to_keep = ['Code commune INSEE', 'geometry']
+    paris_gpd = paris_gpd[columns_to_keep]
+    return paris_gpd
 
-arrondissement_df = get_arrondissement()
-print(arrondissement_df.shape)
+def get_geo(file_name):
+        # Load the GeoJSON file with France's regions
+        geo_coordinate = gpd.read_file(file_name)
+        print(f"geo coordinate columns {geo_coordinate.columns}")
+        geo_coordinate = geo_coordinate.rename(columns={'code': 'Code commune INSEE'})
+        columns_to_keep = ['Code commune INSEE', 'geometry']
+        geo_coordinate = geo_coordinate[columns_to_keep]
+        geo_coordinate['Code commune INSEE'] = pd.to_numeric(geo_coordinate['Code commune INSEE'], errors='coerce')
+
+        return geo_coordinate
 
 apl_2015 = read_apl_csv(2015)
 apl_2016 = read_apl_csv(2016)
@@ -146,81 +135,15 @@ apl_2018 = merge_apl_cdp(apl_2018, cdp)
 apl_2019 = merge_apl_cdp(apl_2019, cdp)
 apl_2021 = merge_apl_cdp(apl_2021, cdp)
 
-# merge with arrondissement
-apl_2015 = merge_arrondissement(apl_2015, arrondissement_df)
-apl_2016 = merge_arrondissement(apl_2016, arrondissement_df)
-apl_2017 = merge_arrondissement(apl_2017, arrondissement_df)
-apl_2018 = merge_arrondissement(apl_2018, arrondissement_df)
-apl_2019 = merge_arrondissement(apl_2019, arrondissement_df)
-apl_2021 = merge_arrondissement(apl_2021, arrondissement_df)
 
+# Paris
 paris_df_2015 = get_paris_data(apl_2015)
 paris_df_2016 = get_paris_data(apl_2016)
 paris_df_2017 = get_paris_data(apl_2017)
 paris_df_2018 = get_paris_data(apl_2018)
 paris_df_2019 = get_paris_data(apl_2019)
 paris_df_2021 = get_paris_data(apl_2021)
-
-# todo : get the department data before merging
-yveline_df_2015 = get_yveline_data(apl_2015, '2013')
-
-nord_df_2015 = get_departement_nord_data(apl_2015, '2013')
-
-
-arrondissement_apl_2015 = group_by_arrondissement(apl_2015, '2013')
-arrondissement_apl_2016 = group_by_arrondissement(apl_2016, '2014')
-arrondissement_apl_2017 = group_by_arrondissement(apl_2017, '2015')
-arrondissement_apl_2018 = group_by_arrondissement(apl_2018, '2016')
-arrondissement_apl_2019 = group_by_arrondissement(apl_2019, '2017')
-arrondissement_apl_2021 = group_by_arrondissement(apl_2021, '2019')
-
-print(arrondissement_apl_2019.shape)
-print(arrondissement_apl_2019.head())
-print(arrondissement_apl_2019.tail())
-
-
-exit(1)
-
-
-grouped_apl_2015 = group_by_department(apl_2015, '2013')
-grouped_apl_2016 = group_by_department(apl_2016, '2014')
-grouped_apl_2017 = group_by_department(apl_2017, '2015')
-grouped_apl_2018 = group_by_department(apl_2018, '2016')
-grouped_apl_2019 = group_by_department(apl_2019, '2017')
-grouped_apl_2021 = group_by_department(apl_2021, '2019')
-
-# Load the GeoJSON file with France's regions
-france_regions = gpd.read_file(
-    "https://raw.githubusercontent.com/holtzy/The-Python-Graph-Gallery/master/static/data/france.geojson")
-france_regions = france_regions.rename(columns={'nom': 'nom_departement'})
-# print("france region")
-# print(france_regions.columns)
-# print(france_regions.head())
-
-
-# Load the GeoJSON file with France's regions
-paris_gpd = gpd.read_file(r"C:\Users\idris\OneDrive\Documents\Study\M2\data "
-                          r"vis\project\ressources\paris-arrondissements.geojson")
-paris_gpd = paris_gpd.rename(columns={'c_arinsee': 'Code commune INSEE'})
-columns_to_keep = ['Code commune INSEE', 'geometry']
-paris_gpd = paris_gpd[columns_to_keep]
-
-# print('PARIS GPD')
-# print(paris_gpd.columns)
-# print(paris_gpd.head())
-
-department_apl_2015 = merge_to_get_coordinate(grouped_apl_2015)
-department_apl_2016 = merge_to_get_coordinate(grouped_apl_2016)
-department_apl_2017 = merge_to_get_coordinate(grouped_apl_2017)
-department_apl_2018 = merge_to_get_coordinate(grouped_apl_2018)
-department_apl_2019 = merge_to_get_coordinate(grouped_apl_2019)
-department_apl_2021 = merge_to_get_coordinate(grouped_apl_2021)
-
-# print("department apl")
-# print(department_apl_2021.columns)
-# print(department_apl_2021.head())
-
-
+paris_gpd = get_paris_gpd()
 paris_geo_2015 = merge_paris_geo(paris_gpd, paris_df_2015)
 paris_geo_2016 = merge_paris_geo(paris_gpd, paris_df_2016)
 paris_geo_2017 = merge_paris_geo(paris_gpd, paris_df_2017)
@@ -228,6 +151,41 @@ paris_geo_2018 = merge_paris_geo(paris_gpd, paris_df_2018)
 paris_geo_2019 = merge_paris_geo(paris_gpd, paris_df_2019)
 paris_geo_2021 = merge_paris_geo(paris_gpd, paris_df_2021)
 
-# print("PARIS GEO")
-# print(paris_geo_2021.columns)
-# print(paris_geo_2021.head())
+
+# Nord
+nord_df_2015 = get_departement_data(apl_2015, '2013', 'Nord')
+nord_df_2016 = get_departement_data(apl_2016, '2014', 'Nord')
+nord_df_2017 = get_departement_data(apl_2017, '2015', 'Nord')
+nord_df_2018 = get_departement_data(apl_2018, '2016', 'Nord')
+nord_df_2019 = get_departement_data(apl_2019, '2017', 'Nord')
+nord_df_2021 = get_departement_data(apl_2021, '2019', 'Nord')
+print(f"nord columns {nord_df_2021.columns}")
+nord_geo = get_geo(r"C:\Users\idris\OneDrive\Documents\Study\M2\data vis\project\ressources\nord.geojson")
+print("geo columns" + nord_geo.columns)
+nord_geo_2015 = merge_geo(nord_geo, nord_df_2015)
+nord_geo_2016 = merge_geo(nord_geo, nord_df_2016)
+nord_geo_2017 = merge_geo(nord_geo, nord_df_2017)
+nord_geo_2018 = merge_geo(nord_geo, nord_df_2018)
+nord_geo_2019 = merge_geo(nord_geo, nord_df_2019)
+nord_geo_2021 = merge_geo(nord_geo, nord_df_2021)
+
+
+# todo : get the department data before merging
+yveline_df_2015 = get_departement_data(apl_2015, '2013', 'Yvelines')
+
+
+# group by departement
+grouped_apl_2015 = group_by_department(apl_2015, '2013')
+grouped_apl_2016 = group_by_department(apl_2016, '2014')
+grouped_apl_2017 = group_by_department(apl_2017, '2015')
+grouped_apl_2018 = group_by_department(apl_2018, '2016')
+grouped_apl_2019 = group_by_department(apl_2019, '2017')
+grouped_apl_2021 = group_by_department(apl_2021, '2019')
+
+# merge departement geo
+department_apl_2015 = merge_to_get_coordinate(grouped_apl_2015)
+department_apl_2016 = merge_to_get_coordinate(grouped_apl_2016)
+department_apl_2017 = merge_to_get_coordinate(grouped_apl_2017)
+department_apl_2018 = merge_to_get_coordinate(grouped_apl_2018)
+department_apl_2019 = merge_to_get_coordinate(grouped_apl_2019)
+department_apl_2021 = merge_to_get_coordinate(grouped_apl_2021)

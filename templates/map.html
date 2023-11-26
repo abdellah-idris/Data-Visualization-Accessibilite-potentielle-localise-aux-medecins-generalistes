@@ -103,7 +103,6 @@
 function onClickFeature(e) {
     var layer = e.target;
     var departmentName = layer.feature.properties['nom'];
-
     // Check if the department name is Paris
     if (departmentName === 'Paris') {
         // Fetch Paris GeoJSON data
@@ -122,12 +121,26 @@ function onClickFeature(e) {
             },
             dataType: 'json'
         });
-    } else {
-        // Reset the style of the clicked layer
-        resetHighlight(e);
+    } else if (departmentName === 'Nord') {
+        // Fetch Paris GeoJSON data
+        $.ajax({
+            type: 'POST',
+            url: '/get_nord_data',
+            data: { year: selectedYear },
+            success: function (parisData) {
+                geojsonLayer.clearLayers();
+                geojsonLayer.addData(parisData);
 
+                // Zoom to the bounds of the Paris GeoJSON data
+                map.fitBounds(geojsonLayer.getBounds());
+
+                // Additional actions if needed
+            },
+            dataType: 'json'
+        });
+    }else {
         // Display the department name
-        // TODO: Handle other departments
+        // TODO : other departemnts
         console.log('Department: ' + departmentName);
     }
 }

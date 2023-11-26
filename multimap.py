@@ -1,6 +1,6 @@
 from mock import (department_apl_2015, department_apl_2016, department_apl_2017, department_apl_2018, department_apl_2019,
                   department_apl_2021, paris_geo_2015, paris_geo_2016, paris_geo_2017, paris_geo_2018, paris_geo_2019,
-                  paris_geo_2021)
+                  paris_geo_2021, nord_geo_2015, nord_geo_2016, nord_geo_2017, nord_geo_2018, nord_geo_2019, nord_geo_2021)
 from flask import Flask, render_template, request, jsonify
 import branca.colormap as cm
 
@@ -77,7 +77,7 @@ def get_map():
                 'nom': row['nom_departement'],
                 'Weighted APL': row['Weighted APL'],
                 'Population standardisée ' + str(int(year)-2) + ' pour la médecine générale': row[
-                'Population standardisée ' + str(int(year)-2) + ' pour la médecine générale'],
+                    'Population standardisée ' + str(int(year)-2) + ' pour la médecine générale'],
                 'Weighted Average APL': row['Weighted Average APL'],
             },
             'geometry': row['geometry'].__geo_interface__
@@ -108,6 +108,49 @@ def get_paris_data():
         apl = paris_geo_2019
     elif year == '2021':
         apl = paris_geo_2021
+
+    apl_dict = {
+        'type': 'FeatureCollection',
+        'features': []
+    }
+
+    for index, row in apl.iterrows():
+        feature = {
+            'type': 'Feature',
+            'properties': {
+                'code': row['Code commune INSEE'],
+                'nom': row['nom_commune'],
+                'Weighted Average APL': row['APL aux médecins généralistes'],
+                'Population standardisée ' + str(int(year)-2) + ' pour la médecine générale': row[
+                    'Population standardisée ' + str(int(year)-2) + ' pour la médecine générale'],
+            },
+            'geometry': row['geometry'].__geo_interface__
+        }
+        apl_dict['features'].append(feature)
+
+    return jsonify(apl_dict)
+
+@app.route('/get_nord_data', methods=['POST'])
+def get_nord_data():
+    apl = None
+    if request.method == 'POST':
+        year = request.form.get('year')
+    else:
+        year = "2015"  # Default year
+
+    # Load data based on the selected year
+    if year == '2015':
+        apl = nord_geo_2015
+    elif year == '2016':
+        apl = nord_geo_2016
+    elif year == '2017':
+        apl = nord_geo_2017
+    elif year == '2018':
+        apl = nord_geo_2018
+    elif year == '2019':
+        apl = nord_geo_2019
+    elif year == '2021':
+        apl = nord_geo_2021
 
     apl_dict = {
         'type': 'FeatureCollection',
