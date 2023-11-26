@@ -103,6 +103,7 @@
 function onClickFeature(e) {
     var layer = e.target;
     var departmentName = layer.feature.properties['nom'];
+
     // Check if the department name is Paris
     if (departmentName === 'Paris') {
         // Fetch Paris GeoJSON data
@@ -122,12 +123,14 @@ function onClickFeature(e) {
             dataType: 'json'
         });
     } else {
+        // Reset the style of the clicked layer
+        resetHighlight(e);
+
         // Display the department name
-        // TODO : other departemnts
+        // TODO: Handle other departments
         console.log('Department: ' + departmentName);
     }
 }
-
 
     // Add a GeoJSON layer with highlighting, tooltips, and onclick method
     var geojsonLayer = L.geoJson(null, {

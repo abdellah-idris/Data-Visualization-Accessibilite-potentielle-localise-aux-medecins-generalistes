@@ -6,6 +6,8 @@ import branca.colormap as cm
 
 app = Flask(__name__)
 
+# https://france-geojson.gregoiredavid.fr/
+
 # Define a color scale for the choropleth using a LinearColormap
 color_scale = cm.LinearColormap(['yellow', 'red'], vmin=0, vmax=1)
 
