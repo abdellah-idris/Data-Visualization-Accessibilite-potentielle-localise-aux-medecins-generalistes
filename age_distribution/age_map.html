@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-colorschemes"></script>
+</head>
+<body>
+    <div id="chart-container">
+        <label for="chart-year-selector">Select a Year:</label>
+        <select id="chart-year-selector">
+            <option value="2015">2015</option>
+            <option value="2016">2016</option>
+            <option value="2017">2017</option>
+        </select>
+        <canvas id="ageChart"></canvas>
+    </div>
+
+    <script>
+        // Placeholder for chart data
+        var chartData = {
+            "2015": { "Moins de 5 ans": 1.25, "de 5 à 9 ans": 0.75, "de 10 à 14 ans": 0.65, "de 15 à 19 ans": 0.67, "de 20 à 24 ans": 0.67, "de 25 à 29 ans": 0.72, "de 30 à 34 ans": 0.77, "de 35 à 39 ans": 0.81, "de 40 à 44 ans": 0.87, "de 45 à 49 ans": 0.94, "de 50 à 54 ans": 1.02, "de 55 à 59 ans": 1.13, "de 60 à 64 ans": 1.18, "de 65 à 69 ans": 1.26, "de 70 à 74 ans": 1.42, "de 75 à 79 ans": 1.61, "de 80 à 84 ans": 1.80, "de 85 à 89 ans": 1.96, "Plus de 90 ans": 1.79 },
+            "2016": { "Moins de 5 ans": 1.25, "de 5 à 9 ans": 0.80, "de 10 à 14 ans": 0.65, "de 15 à 19 ans": 0.65, "de 20 à 24 ans": 0.66, "de 25 à 29 ans": 0.72, "de 30 à 34 ans": 0.79, "de 35 à 39 ans": 0.82, "de 40 à 44 ans": 0.87, "de 45 à 49 ans": 0.93, "de 50 à 54 ans": 1.02, "de 55 à 59 ans": 1.12, "de 60 à 64 ans": 1.17, "de 65 à 69 ans": 1.25, "de 70 à 74 ans": 1.41, "de 75 à 79 ans": 1.58, "de 80 à 84 ans": 1.76, "de 85 à 89 ans": 1.89, "Plus de 90 ans": 1.78 },
+            "2017": { "Moins de 5 ans": 1.26, "de 5 à 9 ans": 0.74, "de 10 à 14 ans": 0.63, "de 15 à 19 ans": 0.64, "de 20 à 24 ans": 0.67, "de 25 à 29 ans": 0.71, "de 30 à 34 ans": 0.78, "de 35 à 39 ans": 0.82, "de 40 à 44 ans": 0.86, "de 45 à 49 ans": 0.94, "de 50 à 54 ans": 1.04, "de 55 à 59 ans": 1.12, "de 60 à 64 ans": 1.18, "de 65 à 69 ans": 1.26, "de 70 à 74 ans": 1.41, "de 75 à 79 ans": 1.59, "de 80 à 84 ans": 1.78, "de 85 à 89 ans": 1.91, "Plus de 90 ans": 1.79 },
+            // Add entries for other years
+        };
+
+        var ctx = document.getElementById('ageChart').getContext('2d');
+        var chart;
+
+        // Function to update the chart based on the selected year
+        function updateChart() {
+            var selectedYear = document.getElementById('chart-year-selector').value;
+            var data = chartData[selectedYear];
+
+            if (chart) {
+                chart.destroy(); // Destroy existing chart to prevent overlap
+            }
+
+            chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(data),
+                    datasets: [{
+                        label: 'Poids de la tranche d\'âge',
+                        data: Object.values(data),
+                        backgroundColor: getColorGradient(Object.values(data)),
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        // Event handler for the chart year selector
+        document.getElementById('chart-year-selector').addEventListener('change', updateChart);
+
+        // Initial update of the chart based on the selected year
+        updateChart();
+
+        // Function to generate a color gradient based on values
+        function getColorGradient(values) {
+            var max = Math.max(...values);
+            var min = Math.min(...values);
+
+            var colorScale = values.map(value => {
+                var normalizedValue = (value - min) / (max - min);
+                return `rgba(75, 192, 192, ${normalizedValue})`;
+            });
+
+            return colorScale;
+        }
+    </script>
+</body>
+</html>
+<!-- To launch :python -m http.server -->
