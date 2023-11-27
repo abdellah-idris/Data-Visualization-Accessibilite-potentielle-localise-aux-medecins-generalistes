@@ -171,7 +171,7 @@
                     var aplValue = feature.properties['Weighted Average APL'];
                     var region = feature.properties['nom'];
                     var population = feature.properties['Population standardisée'];
-                    layer.bindTooltip("Departement: " + region + "<br>Weighted APL: " + aplValue + "<br>Population " + separateIntoGroups(Math.round(population))).openTooltip();
+                    layer.bindTooltip("Departement: " + region + "<br>Weighted APL: " + parseFloat(aplValue).toFixed(2) + "<br>Population " + separateIntoGroups(Math.round(population))).openTooltip();
                 },
                 mouseout: function (e) {
                     resetHighlight(e);
