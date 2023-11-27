@@ -109,7 +109,7 @@ def get_paris_gpd():
 def get_geo(file_name):
         # Load the GeoJSON file with France's regions
         geo_coordinate = gpd.read_file(file_name)
-        print(f"geo coordinate columns {geo_coordinate.columns}")
+        # print(f"geo coordinate columns {geo_coordinate.columns}")
         geo_coordinate = geo_coordinate.rename(columns={'code': 'Code commune INSEE'})
         columns_to_keep = ['Code commune INSEE', 'geometry']
         geo_coordinate = geo_coordinate[columns_to_keep]
@@ -159,9 +159,9 @@ nord_df_2017 = get_departement_data(apl_2017, '2015', 'Nord')
 nord_df_2018 = get_departement_data(apl_2018, '2016', 'Nord')
 nord_df_2019 = get_departement_data(apl_2019, '2017', 'Nord')
 nord_df_2021 = get_departement_data(apl_2021, '2019', 'Nord')
-print(f"nord columns {nord_df_2021.columns}")
+# print(f"nord columns {nord_df_2021.columns}")
 nord_geo = get_geo(r"C:\Users\idris\OneDrive\Documents\Study\M2\data vis\project\ressources\nord.geojson")
-print("geo columns" + nord_geo.columns)
+# print("geo columns" + nord_geo.columns)
 nord_geo_2015 = merge_geo(nord_geo, nord_df_2015)
 nord_geo_2016 = merge_geo(nord_geo, nord_df_2016)
 nord_geo_2017 = merge_geo(nord_geo, nord_df_2017)

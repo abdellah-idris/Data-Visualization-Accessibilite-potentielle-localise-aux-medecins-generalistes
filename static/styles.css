@@ -1,9 +1,31 @@
 /* styles.css */
+
+/* Center the h1 title */
+h1 {
+    text-align: center;
+}
+
+/* Clean up the year container */
 .year-container {
     display: flex;
     align-items: center;
+    justify-content: center;  /* Center the content horizontally */
+    margin-bottom: 20px;  /* Add some bottom margin for spacing */
 }
 
 .year-container p {
     margin-right: 10px;  /* Adjust the margin as needed */
+}
+
+/* Reduce the width of the map */
+.folium-map {
+    max-width: 80%;  /* Adjust the max-width as needed */
+    max-height: 80%;  /* Adjust the max-width as needed */
+    margin: 0 auto;  /* Center the map horizontally */
+}
+
+
+
+.leaflet-container {
+    font-size: 1rem;
 }
