@@ -78,7 +78,7 @@ def get_map():
                 'code': row['code'],
                 'nom': row['nom_departement'],
                 'Weighted APL': row['Weighted APL'],
-                'Population standardisée ' + str(int(year)-2) + ' pour la médecine générale': row[
+                'Population standardisée': row[
                     'Population standardisée ' + str(int(year)-2) + ' pour la médecine générale'],
                 'Weighted Average APL': row['Weighted Average APL'],
             },
@@ -123,7 +123,7 @@ def get_paris_data():
                 'code': row['Code commune INSEE'],
                 'nom': row['nom_commune'],
                 'Weighted Average APL': row['APL aux médecins généralistes'],
-                'Population standardisée ' + str(int(year)-2) + ' pour la médecine générale': row[
+                'Population standardisée': row[
                     'Population standardisée ' + str(int(year)-2) + ' pour la médecine générale'],
             },
             'geometry': row['geometry'].__geo_interface__
@@ -166,7 +166,7 @@ def get_nord_data():
                 'code': row['Code commune INSEE'],
                 'nom': row['nom_commune'],
                 'Weighted Average APL': row['APL aux médecins généralistes'],
-                'Population standardisée ' + str(int(year)-2) + ' pour la médecine générale': row[
+                'Population standardisée' : row[
                     'Population standardisée ' + str(int(year)-2) + ' pour la médecine générale'],
             },
             'geometry': row['geometry'].__geo_interface__
@@ -211,7 +211,7 @@ def get_pdc_data():
                 'code': row['Code commune INSEE'],
                 'nom': row['nom_commune'],
                 'Weighted Average APL': row['APL aux médecins généralistes'],
-                'Population standardisée ' + str(int(year)-2) + ' pour la médecine générale': row[
+                'Population standardisée': row[
                     'Population standardisée ' + str(int(year)-2) + ' pour la médecine générale'],
             },
             'geometry': row['geometry'].__geo_interface__

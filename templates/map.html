@@ -103,6 +103,10 @@
         }
     ).addTo(map);
 
+    function separateIntoGroups(number) {
+        return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+
     // Function to add an onclick method to show department name
     function onClickFeature(e) {
         var layer = e.target;
@@ -166,7 +170,8 @@
                     highlightFeature(e);
                     var aplValue = feature.properties['Weighted Average APL'];
                     var region = feature.properties['nom'];
-                    layer.bindTooltip("Department: " + region + "<br>Weighted APL: " + aplValue).openTooltip();
+                    var population = feature.properties['Population standardisée'];
+                    layer.bindTooltip("Departement: " + region + "<br>Weighted APL: " + aplValue + "<br>Population " + separateIntoGroups(Math.round(population))).openTooltip();
                 },
                 mouseout: function (e) {
                     resetHighlight(e);
