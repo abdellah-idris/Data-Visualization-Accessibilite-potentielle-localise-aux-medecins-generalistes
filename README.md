@@ -24,7 +24,7 @@ pip install -r requirements.txt
 ## Usage
 
 
-#### Lanch map
+#### Launch map
 ```bash
 python multimap.py
 ```
