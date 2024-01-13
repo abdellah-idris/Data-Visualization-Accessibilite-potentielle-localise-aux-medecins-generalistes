@@ -7,6 +7,7 @@ Interactive France Map about "Accessibilité potentielle localisée aux médecin
 
 - [Installation](#installation)
 - [Usage](#usage)
+- [Pictures](#Pictures)
 
 ## Installation
 
@@ -40,7 +41,7 @@ python -m http.server
 ```
 
 
-#### Pictures 
+## Pictures 
 
 <img src="https://github.com/abdellah-idris/DataVis/blob/master/ressources/APL_2015.png" align="centre">
 
